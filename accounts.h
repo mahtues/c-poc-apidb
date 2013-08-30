@@ -22,6 +22,9 @@
 #define _CONCAT(str1, str2) str1 ## str2
 #define CONCAT(str1, str2) _CONCAT(str1, str2)
 
+#define _CONCAT3(str1, str2, str3) str1 ## str2 ## str3
+#define CONCAT3(str1, str2, str3) _CONCAT3(str1, str2, str3)
+
 //#define TABLE_HEADER_DESC_FILE EXPAND_AND_QUOTE(CONCAT(TABLE_NAME, _desc.h))
 
 #define TABLE_ROW_STRUCT_NAME EXPAND(CONCAT(TABLE_NAME, _row_t))
@@ -40,8 +43,8 @@ typedef struct {
  * set column
  *****************************************************************************/
 #define COLUMN_DESC(_name, _type, _length) \
-	int CONCAT(CONCAT(TABLE_NAME, _set_), _name)(TABLE_ROW_STRUCT_NAME *row, APIDB_TYPE_ ## _type ## _PRM(_value)) {\
-		APIDB_TYPE_ ## _type ## _SET(row->_name, _value); \
+	int CONCAT3(TABLE_NAME, _row_set_, _name)(TABLE_ROW_STRUCT_NAME *row, APIDB_TYPE_ ## _type ## _PRM(value)) {\
+		APIDB_TYPE_ ## _type ## _SET(row->_name, value); \
 		return 0; \
 	}
 TABLE_COLUMNS
