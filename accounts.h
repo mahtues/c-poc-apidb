@@ -1,14 +1,14 @@
 #include "apidb_types.h"
 #include <string.h>
 
-#define COLUMN_DESC(_type, _length, _name)
+#define COLUMN_DESC(_name, _type, _length)
 
 /* table definition start [ */
 #define TABLE_NAME accounts
 
 #define TABLE_COLUMNS \
-	COLUMN_DESC(int, 1, account_id) \
-	COLUMN_DESC(char, 20+1, name)
+	COLUMN_DESC(account_id, INT, 0) \
+	COLUMN_DESC(name, STR, 20)
 
 /* table definition end ]*/
 
@@ -29,8 +29,8 @@
 /*****************************************************************************
  * row definition
  *****************************************************************************/
-#define COLUMN_DESC(_type, _length, _name) \
-	_type _name[_length];
+#define COLUMN_DESC(_name, _type, _length) \
+	APIDB_TYPE_  ## _type ## _DEC(_name, _length);
 typedef struct {
 	TABLE_COLUMNS
 } TABLE_ROW_STRUCT_NAME;
@@ -39,9 +39,9 @@ typedef struct {
 /*****************************************************************************
  * set column
  *****************************************************************************/
-#define COLUMN_DESC(_type, _length, _name) \
-	int CONCAT(CONCAT(TABLE_NAME, _set_), _name)(TABLE_ROW_STRUCT_NAME *row, _type *_value) {\
-		memcpy(row->_name, _value, sizeof(_type) * _length); \
+#define COLUMN_DESC(_name, _type, _length) \
+	int CONCAT(CONCAT(TABLE_NAME, _set_), _name)(TABLE_ROW_STRUCT_NAME *row, APIDB_TYPE_ ## _type ## _PRM(_value)) {\
+		APIDB_TYPE_ ## _type ## _SET(row->_name, _value); \
 		return 0; \
 	}
 TABLE_COLUMNS
