@@ -26,26 +26,29 @@
 #define CONCAT3(str1, str2, str3) _CONCAT3(str1, str2, str3)
 
 //#define TABLE_HEADER_DESC_FILE EXPAND_AND_QUOTE(CONCAT(TABLE_NAME, _desc.h))
-
-#define TABLE_ROW_STRUCT_NAME EXPAND(CONCAT(TABLE_NAME, _row_t))
+#define TABLE_ENTRY_STRUCT_NAME EXPAND(CONCAT(TABLE_NAME, _entry_t))
 
 /*****************************************************************************
- * row definition
+ * entry definition
  *****************************************************************************/
 #define COLUMN_DESC(_name, _type, _length) \
 	APIDB_TYPE_  ## _type ## _DEC(_name, _length);
 typedef struct {
 	TABLE_COLUMNS
-} TABLE_ROW_STRUCT_NAME;
+} TABLE_ENTRY_STRUCT_NAME;
 #undef COLUMN_DESC
 
 /*****************************************************************************
  * set column
  *****************************************************************************/
 #define COLUMN_DESC(_name, _type, _length) \
-	int CONCAT3(TABLE_NAME, _row_set_, _name)(TABLE_ROW_STRUCT_NAME *row, APIDB_TYPE_ ## _type ## _PRM(value)) {\
-		APIDB_TYPE_ ## _type ## _SET(row->_name, value); \
+	int CONCAT3(TABLE_NAME, _entry_set_, _name)(TABLE_ENTRY_STRUCT_NAME *entry, APIDB_TYPE_ ## _type ## _PRM(value)) {\
+		APIDB_TYPE_ ## _type ## _SET(entry->_name, value); \
 		return 0; \
 	}
 TABLE_COLUMNS
 #undef COLUMN_DESC
+
+#undef TABLE_COLUMNS
+#undef TABLE_NAME
+#undef TABLE_ENTRY_STRUCT_NAME
